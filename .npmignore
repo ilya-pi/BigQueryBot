@@ -1,0 +1,4 @@
+
+
+# Ignore CoffeeScript files in npm distribution
+src
