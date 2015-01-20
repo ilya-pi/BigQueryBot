@@ -9,7 +9,7 @@ npm install big-query-bot
 
 # or
 
-"big-query-bot": "~0.2.x  >=0.2.0",
+"big-query-bot": "~0.2.x  >=0.2.0"
 
 ```
 
