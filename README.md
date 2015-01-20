@@ -2,6 +2,17 @@
 
 BigBueryBot makes it easier to automate your query execution on top of Google Big Query.
 
+## Setup
+
+``` Bash
+npm install big-query-bot
+
+# or
+
+"big-query-bot": "~0.2.x  >=0.2.0",
+
+```
+
 ## Quick Example
 
 
