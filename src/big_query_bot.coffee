@@ -159,7 +159,7 @@ class BigQueryBot extends EventEmitter
 
     # Runs `query` on top of `table` with query name/target table name `name`
     # options.name - name of the query and part of the destination table name
-    # options.table - either a single table name or array of table names
+    # options.source - either a single table name or array of table names
     # options.overwrite - force overwriting the existing table in any case
     query: (options = {}) ->
 
