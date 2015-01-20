@@ -1,11 +1,47 @@
-## Quick-Start
+# BigQueryBot
 
-1. `make setup`
-1. `make run`
+BigBueryBot makes it easier to automate your query execution on top of Google Big Query.
 
-Your main code is in the `/src/main.coffee`.
+## Quick Example
 
-## Setup
+
+``` CoffeeScript
+
+BigQueryBot = (require 'big-query-bot').BigQueryBot
+
+bot = BigQueryBot '<service-account>', '<path-to-pem-file (convert your .p12 to .pem following https://cloud.google.com/storage/docs/authentication)>', { projectId: <projectId>, datasetId: <datasetId> }
+
+bot.on 'ready', () ->
+    async.waterfall [
+        # Import all files from a given gs: path into a temporary table with name `import`
+        bot.load
+            name:       'import'
+            gsPaths:    ['gs://biq-query-bot-sample/*']
+            schema:     'line:STRING'
+
+        # Run some query on top of table imported in the previous step
+        bot.query
+            name:       'step1'
+            sql:        'SELECT * FROM <in> LIMIT 200000'
+            #source:     'sniper_by_ip' <-- uncomment to make this step use a different table instead the one created at the previoud step
+
+        bot.query
+            #name:       'step2'
+            sql:        'SELECT * FROM <in> LIMIT 100000'
+            #overwrite:  true <-- uncommment to overwrite the table even if already exists
+
+        bot.query
+            # name:       'step3'
+            sql:        'SELECT * FROM <in> LIMIT 50000'
+
+        # Extract resulting table from the previous step back to Google Cloud Storage
+        bot.extract ["gs://biq-query-bot-sample/result#{do timestamp}.tsv.gz"]
+
+    ], (_, _r) ->
+        console.log 'Done'
+```
+
+## Documentation
 
 ### BigQueryBot
 
