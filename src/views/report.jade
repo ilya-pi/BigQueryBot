@@ -1,0 +1,45 @@
+doctype html
+html(xmlns='http://www.w3.org/1999/xhtml')
+    head
+        meta(http-equiv='Content-type', content='text/html; charset=utf-8')
+        meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
+        meta(http-equiv='X-UA-Compatible', content='IE=edge')
+        meta(content='telephone=no', name='format-detection')
+        title *|SUBJECT|*
+        style(type='text/css', media='screen').
+            /* Linked Styles */
+            body {
+                padding: 0 !important;
+                margin: 0 !important;
+                display: block !important;
+                width: 100% !important;
+                background: #ffffff;
+                -webkit-text-size-adjust: none
+            }
+
+            a {
+                text-decoration: none
+            }
+
+            /* Campaign Monitor wraps the text in editor in paragraphs. In order to preserve design spacing we remove the padding/margin */
+            p {
+                padding: 0 !important;
+                margin: 0 !important
+            }
+
+            #outlook a {
+                padding: 0;
+            }
+
+    body.body(style='padding: 0 !important; margin: 0 !important; display: block !important; width: 100% !important; background: #ffffff; -webkit-text-size-adjust: none;', leftmargin='0', marginwidth='0', topmargin='0', marginheight='0', offset='0')
+        p These are fresh out of the oven:
+            ul
+                each val in result
+                    li
+                        a(href='#{val}') #{val}
+        hr
+        p Big Query Bot
+        if hint
+            br
+            p P. S. #{hint}
+
