@@ -310,7 +310,7 @@ bot.on 'ready', () ->
     ]
 ```
 
-For a better insight on the function refer to [Big Query API v2: Jobs: Query](https://cloud.google.com/bigquery/docs/reference/v2/jobs#configuration.query)
+For a better insight refer to [Big Query API v2: Jobs: Query](https://cloud.google.com/bigquery/docs/reference/v2/jobs#configuration.query)
 
 <a name="extract" />
 ### extract
@@ -328,7 +328,9 @@ bot.on 'ready', () ->
     ]
 ```
 
-Puts extract destionation into the context.
+Puts extract destination into the context.
+
+For a better insight refer to [Big Query API v2: Jobs: Extract](https://cloud.google.com/bigquery/docs/reference/v2/jobs#configuration.extract)
 
 ## ExtendedBigQueryBot
 
