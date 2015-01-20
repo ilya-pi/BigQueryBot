@@ -17,9 +17,6 @@ config =
     ExtendedBotConfiguration:
 
         mandrill:
-            username: 'your.mandirll@user.name' # These are credentials to access Madrill Console
-            password: 'Your-M4ndrill-P4ssw0rd'
-
             key: 'XXXXXXXXXXXXXXXXXXXXXX'   # API key to send e-mail through Mandrill
             from: 'no-reply@syour.company'     # e-mail that is used in a `from field`
 
