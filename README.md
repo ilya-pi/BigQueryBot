@@ -151,6 +151,15 @@ ExtendedBotConfiguration =
 bot = new ExtendedBigQueryBot QueryBotConfiguration, ExtendedBotConfiguration
 ```
 
+Features:
+
+* [`signurl`](#signurl)
+* [`existing`](#existing)
+* [`ls`](#ls)
+* [`email`](#email)
+* [`uploadToS3`](#uploadToS3)
+* [`graph`](#graph)
+
 --
 
 ## BigQueryBot
@@ -334,5 +343,21 @@ For a better insight refer to [Big Query API v2: Jobs: Extract](https://cloud.go
 
 ## ExtendedBigQueryBot
 
-<a name="source" />
-### source
+<a name="signurl" />
+### signurl
+
+<a name="existing" />
+### existing
+
+<a name="ls" />
+### ls
+
+<a name="email" />
+### email
+
+<a name="uploadToS3" />
+### uploadToS3
+
+<a name="graph" />
+### graph
+
