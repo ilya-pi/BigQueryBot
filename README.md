@@ -20,7 +20,9 @@ npm install big-query-bot
 
 BigQueryBot = (require 'big-query-bot').BigQueryBot
 
-bot = BigQueryBot '<service-account>', '<path-to-pem-file (convert your .p12 to .pem following https://cloud.google.com/storage/docs/authentication)>', { projectId: <projectId>, datasetId: <datasetId> }
+bot = BigQueryBot '<service-account>',
+    '<path-to-pem-file (convert your .p12 to .pem following https://cloud.google.com/storage/docs/authentication)>',
+    { projectId: '<projectId>', datasetId: '<datasetId>' }
 
 bot.on 'ready', () ->
     async.waterfall [
@@ -52,105 +54,17 @@ bot.on 'ready', () ->
         console.log 'Done'
 ```
 
-## Documentation
-
-### BigQueryBot
-
-**BigQueryBot** provides [async](https://github.com/caolan/async) ready functions to control you [Big Query](https://cloud.google.com/bigquery/) execution flow.
-
-Currently supported:
-
-1. `load`
-1. `query`
-1. `fquery` — same a `query`, but reads it from file
-1. `extract`
-
-To setup:
-
-```CoffeeScript
-BigQueryBot = (require './big_query_bot.coffee').BigQueryBot
-
-QueryBotConfiguration =
-    projectId: '<your project id>'
-    datasetId: '<your dataset id>'
-
-bot = new BigQueryBot '<service-account>', '<path-to-pem-file (.p12)>', QueryBotConfiguration
-```
-
-### ExtendedBigQueryBot
-
-**ExtendedBigQueryBot** provides [async](https://github.com/caolan/async) ready functions that extend your [Big Query](https://cloud.google.com/bigquery/) execution flow.
-
-Currently supported:
-
-1. `signurl` — provides signed url that is acessible within the next 48 hours
-1. `email` — emails results to a specified email through [Mandrill](https://mandrillapp.com)
-
-To setup:
-
-```CoffeeScript
-
-QueryBotConfiguration =
-    serviceAccount: '<service-account>'
-    privateKeyPath: '<path-to-pem-file (.p12)>'
-    projectId: '<your project id>'
-    datasetId: '<your dataset id>'
-
-ExtendedBotConfiguration =
-    mandrill:
-        key: '<your mandrill key>'
-        from: '<email to send emails from>'
-
-bot = new ExtendedBigQueryBot QueryBotConfiguration, ExtendedBotConfiguration
-```
-
-## Examples
-
-### Sequential
-
-``` CoffeeScript
-bot.on 'ready', () ->
-    async.waterfall [
-        bot.load
-            # name:       'import'
-            gsPaths:    ['gs://biq-query-bot-sample/*']
-            schema:     'line:STRING'
-
-        bot.query
-            #name:       'step1'
-            sql:        'SELECT * FROM <in> LIMIT 200000'
-            #source:     'sniper_by_ip'
-
-        bot.query
-            #name:       'step2'
-            sql:        'SELECT * FROM <in> LIMIT 100000'
-            #overwrite:  true
-
-        bot.query
-            # name:       'step3'
-            sql:        'SELECT * FROM <in> LIMIT 50000'
-
-        bot.extract ["gs://biq-query-bot-sample/result#{do timestamp}.tsv.gz"]
-
-        do bot.signurl
-
-        bot.graph './graphs/simple.html'
-
-        bot.email 'rubengersons@screen6.io', null
-
-    ], (_, _r) ->
-        console.log 'Done'
-```
-
-### Parallel
+## Extended Example with Parallel execution, execution graph, e-mail notification and 48h signed url
 
 ``` CoffeeScript
 bot.on 'ready', () ->
     async.parallel [
+        # Load lines from first file in parallel
         bot.load
             gsPaths:    ['gs://biq-query-bot-sample/*']
             schema:     'line:STRING'
 
+        # Load lines from second file in parallel
         bot.load
             gsPaths:    ['gs://biq-query-bot-sample/*']
             schema:     'line:STRING'
@@ -158,44 +72,92 @@ bot.on 'ready', () ->
     ], (e, r) ->
 
         async.waterfall [
-            bot.email 'ilya.pimenov@gmail.com', 'sniper logs, imported from gs://', r
+            # Notify me that the lines were imported from the Google Cloud Storager
+            # with an e-mail containing custom message and tablenemas
+            # for the imported lines
+            bot.email 'ilya.XXX.pimenov@gmail.com', 'Logs, imported from gs://', r
 
+            # Run query that takes both tables as input
             bot.query
                 sql:    'SELECT * FROM <in0>, <in1> LIMIT 200000'
 
+            # Run query that is stored elsewhere on the filesystem
+            bot.query
+                file: './my-query.sql'
+
+            # Render an .html graphs of all the dependencies
             bot.graph './graphs/parallel.html'
 
+            # Estract resulting table to a tsv.gz file on Google Cloud Storage
             bot.extract ["gs://biq-query-bot-sample/result#{do timestamp}.tsv.gz"]
 
+            # Created a signed url with the a 48 hours available link to the exported tsv.gz file
             do bot.signurl
 
         ], (_, _r) ->
             console.log "Done, result url #{_r}"
 ```
 
-### Sniper ETL
+## Documentation
+
+### BigQueryBot
+
+**BigQueryBot** provides [async](https://github.com/caolan/async) ready functions to control you [Big Query](https://cloud.google.com/bigquery/) execution flow.
 
 ``` CoffeeScript
-bot.on 'ready', () ->
-    async.waterfall [
-        bot.load
-            gsPaths: ['gs://biq-query-bot-sample/*']
-            schema: 'line:STRING'
 
-        bot.query
-            file: './src/queries/etl/sniper/01-read-lines.sql'
+BigQueryBot = (require 'big-query-bot').BigQueryBot
 
-        bot.query
-            file: './src/queries/etl/sniper/02-add-geo-meta.sql'
-
-        bot.query
-            file: './src/queries/etl/sniper/03-join-with-geo.sql'
-
-        bot.graph './graphs/etl.html'
-
-        bot.email 'ilya.pimenov@gmail.com', 'sniper etl data for period 10-11.2014 ...'
-
-    ], (_, _r) ->
-        console.log 'Done'
+bot = BigQueryBot '<service-account>',
+    '<path-to-pem-file (convert your .p12 to .pem following https://cloud.google.com/storage/docs/authentication)>',
+    { projectId: '<projectId>', datasetId: '<datasetId>' }
 ```
 
+Features:
+
+* [`load`](#load)
+* [`query`](#query)
+* [`extract`](#extract)
+
+### ExtendedBigQueryBot
+
+**ExtendedBigQueryBot** provides [async](https://github.com/caolan/async) ready functions that extend your [Big Query](https://cloud.google.com/bigquery/) execution flow.
+
+``` CoffeeScript
+
+ExtendedBigQueryBot = (require 'big-query-bot').ExtendedBigQueryBot
+
+QueryBotConfiguration =
+    serviceAccount: '<service-account>'
+    privateKeyPath: '<path-to-pem-file (convert your .p12 to .pem following https://cloud.google.com/storage/docs/authentication)>'
+    projectId: '<your project id>'
+    datasetId: '<your dataset id>'
+
+ExtendedBotConfiguration =
+    mandrill: # [Optional] Only if you want to send e-mail notifications
+        key: '<your mandrill key>'
+        from: '<email to send emails from>'
+
+    s3: # [Optional] Only if you want to upload results to Amazon S3
+        accessKey: 'XXXXXXXXXXXXXXXXXXXX' # Amazon AWS Credentials
+        secretKey: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+
+bot = new ExtendedBigQueryBot QueryBotConfiguration, ExtendedBotConfiguration
+```
+
+--
+
+## BigQueryBot
+
+<a name="load" />
+### load
+
+<a name="query" />
+### query
+
+
+<a name="extract" />
+### extract
+
+
+## ExtendedBigQueryBot
