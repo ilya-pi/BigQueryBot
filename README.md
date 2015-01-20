@@ -160,6 +160,17 @@ bot = new ExtendedBigQueryBot QueryBotConfiguration, ExtendedBotConfiguration
 
 Throw `['table1', 'table2', ...]` as source for current context, they will be passed on to the next statement.
 
+```
+bot.on 'ready', () ->
+    async.waterfall [
+
+        bot.source 'my-lovely-initial-table'
+
+        ...
+
+    ]
+```
+
 Use an array or a single string item.
 
 <a name="with" />
@@ -168,6 +179,19 @@ Use an array or a single string item.
 Throw in `['some-other-table']` into current context. So if you had `table1` in there,
 after you will have `['table1', 'some-other-table']`. Always appended at the end of
 current array of string in the context.
+
+```
+bot.on 'ready', () ->
+    async.waterfall [
+
+        ...
+
+        bot.with 'my-second-lovely-initial-table'
+
+        ...
+
+    ]
+```
 
 Use an array or a single string item.
 
@@ -178,6 +202,19 @@ Flattens current array in the context. With a mix of sequential and parallel sta
 end up with a structure like `['table1', 'table2', ['table21', 'table22', ['table31'], 'table23']]`, this will
 flatten it into `['table1', 'table2', 'table21', 'table22', 'table31', 'table23']` which will enable it in further
 query substitutions.
+
+```
+bot.on 'ready', () ->
+    async.waterfall [
+
+        ...
+
+        bot.flatten
+
+        ...
+
+    ]
+```
 
 <a name="parallel" />
 ### parallel
@@ -205,6 +242,8 @@ bot.on 'ready', () ->
                 step2_2
             ]
         ]
+
+        ...
 
     ]
 ```
@@ -275,6 +314,21 @@ For a better insight on the function refer to [Big Query API v2: Jobs: Query](ht
 
 <a name="extract" />
 ### extract
+
+Runs table `extract` from Big Query into Google Cloud Storage
+
+```
+bot.on 'ready', () ->
+    async.waterfall [
+
+        ...
+
+        bot.extract ["gs://bqb_export/my-extract-name_*.tsv.gz"]
+
+    ]
+```
+
+Puts extract destionation into the context.
 
 ## ExtendedBigQueryBot
 
