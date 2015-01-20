@@ -1,0 +1,23 @@
+{
+  "name": "big-query-bot-example",
+  "version": "0.0.1",
+  "description": "Big Query Bot usage example",
+  "homepage": "ilyapimenov.com",
+  "license": "MIT License",
+  "author": {
+    "name": "Ilya Pimenov",
+    "email": "Ilya.Pimenov@gmail.com"
+  },
+  "engines": {
+    "node": "0.10.x     >=0.10.25",
+    "npm": "1.4.x      >1.4.3"
+  },
+  "devDependencies": {
+    "better-require": "0.0.x      >=0.0.3",
+    "coffee-script": "1.7.x      >=1.7.0",
+    "tv4": "1.1.0"
+  },
+  "dependencies": {
+    "big-query-bot": "~0.2.x  >=0.2.0"
+  }
+}
