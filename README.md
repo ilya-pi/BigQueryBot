@@ -344,19 +344,95 @@ For a better insight refer to [Big Query API v2: Jobs: Extract](https://cloud.go
 ## ExtendedBigQueryBot
 
 <a name="signurl" />
-### signurl
+### signurl(gsPaths)
+
+Creates signed urls for a given array of Google Cloud Storage paths.
+
+```
+bot.on 'ready', () ->
+    async.waterfall [
+
+        bot.source ["gs://bqb_export/my-extract-name_0.tsv.gz", "gs://bqb_export/my-extract-name_1.tsv.gz"]
+
+        do bot.signurl
+
+    ]
+```
 
 <a name="existing" />
 ### existing
 
+Filters exising days with Google Cloud Storage, incoming configuraiton is as follows
+
+```
+bot.on 'ready', () ->
+    async.waterfall [
+
+        # i.e. List of dates you want to process
+        bot.source ['20141127', '20141128', '20141129']
+
+        # Filter existing files in Google Cloud Storage
+        bot.existing
+            bucket: 'logs-per-day'
+            prefix: 'my-service/db-log'
+            delimiter: '/'
+            dates: ['20141127', '20141128', '20141129'] # [Optinal/Required] Either stated explicitly
+                                                        # or chained from the previous steps
+                                                        # with `getDate`
+            getDate: (path) -> path.substr 4, 8 # [Optional] will resolve to paths like:
+                                                # gs://logs-per-day/my-service/db-log1127,
+                                                # gs://logs-per-day/my-service/db-log1128,
+                                                # gs://logs-per-day/my-service/db-log1129
+                                                # but only if they are present on your Google Cloud Storage
+
+    ]
+```
+
 <a name="ls" />
 ### ls
 
+Lists all path on Google Storage that match given wildcard
+
+```
+bot.on 'ready', () ->
+    async.waterfall [
+
+        bot.ls
+            path: 'gs://my-bucket/my-logs*.tsv.gz'
+
+        # Will give all files like:
+        # gs://my-bucket/my-logs0.tsv.gz
+        # gs://my-bucket/my-logs1.tsv.gz
+        # gs://my-bucket/my-logs2.tsv.gz
+        # gs://my-bucket/my-logs3.tsv.gz
+        #
+        # if they are present on Google Cloud Storage
+
+    ]
+```
+
 <a name="email" />
-### email
+### email: (recepient, hint, links)
+
+__NB:__ You must specify Mandrill credentials in `ExtendedQueryBot` configuration upon initialization in order for this to work.
+
+Sends an e-mail notification to a `recepient` with contents of current context (if it is a chained call) or `links` if explicitly specified
+
+```
+bot.on 'ready', () ->
+    async.waterfall [
+
+        bot.source ['some', 'important', 'big query tables', 'or', 'other', 'strings']
+
+        bot.email 'ilya.XXX.pimenov@gmail.com', 'Logs, imported from gs://', r
+
+    ]
+```
 
 <a name="uploadToS3" />
 ### uploadToS3
+
+__NB:__ You must specify AWS credentials in `ExtendedQueryBot` configuration upon initialization in order for this to work.
 
 <a name="graph" />
 ### graph

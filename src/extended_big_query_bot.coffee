@@ -66,8 +66,8 @@ class ExtendedBigQueryBot extends BigQueryBot
 
     # Filters exising days with Google Cloud Storage, incoming configuraiton is as follows
     #
-    #   bucket: 'screen6-adform-continuous'
-    #   prefix: 'dt='
+    #   bucket: 'my-bucket'
+    #   prefix: 'some/path/in/bucket'
     #   delimiter: '/'
     #   getDate: (path) -> path.substr 3, 8
     #   dates: ['20141125', '20141126'] -- might be chained from the previous steps
