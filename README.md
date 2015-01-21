@@ -2,7 +2,7 @@
 
 BigQueryBot makes it easier to automate your query execution on top of Google Big Query.
 
-Based on [Big Query API v2](https://cloud.google.com/bigquery/docs/reference/v2)
+Based on [Big Query API v2](https://cloud.google.com/bigquery/docs/reference/v2) and [Google APIs Node.js Client (Alpha) v1.x](https://github.com/google/google-api-nodejs-client/)
 
 ## Setup
 
