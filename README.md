@@ -460,3 +460,22 @@ bot.on 'ready', () ->
 <a name="graph" />
 ### graph
 
+Renders graph of dependencies for all the nodes in the current execution flow.
+
+
+```
+bot.on 'ready', () ->
+    async.waterfall [
+
+        ...
+
+        # Render an .html graphs of all the dependencies
+        bot.graph './graphs/parallel.html'
+
+        ...
+    ]
+```
+
+Result will look something like this (but clickable and zoomable):
+
+![Splash Screen](https://raw.githubusercontent.com/ilya-pi/BigQueryBot/master/graphs/sample.png "Dependency graph example")
