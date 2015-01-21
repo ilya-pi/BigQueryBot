@@ -1,6 +1,6 @@
 {
   "name": "big-query-bot",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Automated Google's Big Query execution with async library",
   "homepage": "ilyapimenov.com",
   "license": "MIT License",
