@@ -434,6 +434,29 @@ bot.on 'ready', () ->
 
 __NB:__ You must specify AWS credentials in `ExtendedQueryBot` configuration upon initialization in order for this to work.
 
+Uploads current
+
+```
+
+bot.on 'ready', () ->
+    async.waterfall [
+
+        bot.extract ["gs://my-bucket/my-awesome-results-of-calculation_*.tsv.gz"]
+
+        do bot.ls
+
+        do bot.signurl
+
+        bot.uploadToS3
+            bucket: 'my-clients-aws-bucket'
+            objectName: "results-tailored-by-my-company_*.tsv.gz"
+            links: "http://publicly-available-resource" # [Optional/Required] Normally it is taken from the context,
+                                                        # and then you should not specify it.
+                                                        # Yet, you can specify it explicitly might you so desire
+
+    ]
+```
+
 <a name="graph" />
 ### graph
 
