@@ -1,3 +1,5 @@
+_To all those using the project!!!_ I'm very happy you liked it — please drop [me](mailto:ilya.pimenov@gmail.com) a line or two on your experience, I would've love to enhance it further based on your feedback.
+
 # BigQueryBot
 
 BigQueryBot makes it easier to automate your query execution on top of Google BigQuery.
